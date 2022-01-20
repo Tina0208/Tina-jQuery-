@@ -28,7 +28,7 @@
       ul {
         list-style: none;
         padding: 0;
-        width: 400%;
+        width: 500%;
         display: flex;
         transition: all 1s;
       }
@@ -80,6 +80,10 @@
         color: white;
         /* border: 1px solid yellow; */
       }
+
+      li.active {
+        background-color: white;
+      }
     </style>
   </head>
   <body>
@@ -89,9 +93,10 @@
         <li><img src="./imgs/slide2.jpg" alt="" /></li>
         <li><img src="./imgs/slide3.jpg" alt="" /></li>
         <li><img src="./imgs/slide4.jpg" alt="" /></li>
+        <li><img src="./imgs/slide1.jpg" alt="" /></li>
       </ul>
       <ul class="slider-points">
-        <li class="mx-3"></li>
+        <li class="mx-3 active"></li>
         <li class="mx-3"></li>
         <li class="mx-3"></li>
         <li class="mx-3"></li>
@@ -124,7 +129,7 @@
     ></script>
     <script>
       let liindex = 0;
-      
+
       $(".slider-points")
         .children()
         .click(function () {
@@ -137,56 +142,83 @@
             .css("background-color", "");
           $(".slider-imgs").css("margin-left", change);
           // getliindex(index);
-          console.log("liindex",liindex);
+          console.log("liindex", liindex);
         });
 
+      // console.log(liindex);
 
-        // console.log(liindex);
+      // function getliindex(index){
+      // return index;
+      // }
 
-        // function getliindex(index){
-        // return index;
-        // }
-
-        let page = liindex;
-        $(".fa-arrow-right").click(function(){
-            console.log("page",page);
-            if(page < 3){
-            page++;
-            let change = page * -100 + "%";
-            $(".slider-imgs").css("margin-left", change);
-            $(".slider-points").children().eq(page).css("background-color", "white").siblings()
+      $(".fa-arrow-right").click(function () {
+        console.log("page", page);
+        if (liindex < 3) {
+          liindex++;
+          let change = liindex * -100 + "%";
+          $(".slider-imgs").css("margin-left", change);
+          $(".slider-points")
+            .children()
+            .eq(liindex)
+            .css("background-color", "white")
+            .siblings()
             .css("background-color", "rgba(0,0,0,0)");
-            // console.log(page);
-        };
-        })
-
-        $(".fa-arrow-left").click(function(){
-            if(page > 0){
-            page--;
-            let change = page * -100 + "%";
-            $(".slider-imgs").css("margin-left", change);
-            $(".slider-points").children().eq(page).css("background-color", "white").siblings()
-            .css("background-color", "rgba(0,0,0,0)");
-            }
-        })
-
-     
-
-       //自動輪播，下排指示器尚未連動
-    setInterval(() => {
-      $(".slider-imgs").css("transition","1s").css("margin-left", "-=" + $(".slider-imgs li").width());
-      console.log($(".slider-imgs").offset().left);
-      console.log($(".slider-imgs li").width() * -4);
-
-      if ($(".slider-imgs").offset().left <= $(".slider-imgs li").width() * -3) {
-        console.log("hi");
-        $(".slider-imgs").css("margin-left", "-=" + $(".slider-imgs li").width()).one("transitionend",function(){
-          $(".slider-imgs").css("transition","none").css("margin-left","0");
-        });
+          // console.log(page);
         }
-      },2000);
-        
-    
+      });
+
+      $(".fa-arrow-left").click(function () {
+        if (liindex > 0) {
+          liindex--;
+          let change = liindex * -100 + "%";
+          $(".slider-imgs").css("margin-left", change);
+          $(".slider-points")
+            .children()
+            .eq(liindex)
+            .css("background-color", "white")
+            .siblings()
+            .css("background-color", "rgba(0,0,0,0)");
+        }
+      });
+
+      //自動輪播製作中
+      page = 0;
+      setInterval(() => {
+        if(liindex !== 0){
+          page = liindex;
+        }
+
+        page++;
+        console.log(page);
+        $(".slider-points li")
+          .eq(page)
+          .css("background-color", "white").siblings().css("background-color", "transparent");
+        $(".slider-imgs")
+          .css("transition", "1s")
+          .css("margin-left", "-=" + $(".slider-imgs li").width());
+        console.log($(".slider-imgs").offset().left);
+        console.log($(".slider-imgs li").width() * -4);
+
+        if (
+          $(".slider-imgs").offset().left <=
+          $(".slider-imgs li").width() * -3
+        ) {
+          console.log("hi");
+          page = 0;
+          $(".slider-points li")
+            .eq(0)
+            .css("background-color", "white")
+            .siblings()
+            .css("background-color", "transparent");
+          $(".slider-imgs")
+            .css("margin-left", "-=" + $(".slider-imgs li").width())
+            .one("transitionend", function () {
+              $(".slider-imgs")
+                .css("transition", "none")
+                .css("margin-left", "0");
+            });
+        }
+      }, 2000);
     </script>
   </body>
 </html>
